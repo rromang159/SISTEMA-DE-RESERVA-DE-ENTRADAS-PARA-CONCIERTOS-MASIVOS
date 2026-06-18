@@ -1,0 +1,466 @@
+FACULTAD DE CIENCIAS E INGENIERÍA
+CARRERA DE INGENIERÍA DE SOFTWARE
+TEMA:
+SISTEMA DE RESERVA DE ENTRADAS PARA CONCIERTOS MASIVOS
+AUTORES:
+Ferruzola Lucas Holger Samuel
+Freire Bravo Luis Eduardo
+Méndez Barzola Michael Alberto
+Román Gamarra Ruth Noemi
+Torres Morales Deyvi Matheus
+Vergara Lino Cristofer Javier
+ASIGNATURA:
+Arquitectura de Software
+NIVEL:
+4to. Semestre de Ing. Software
+DOCENTE:
+Ing. María Gabriela Espinoza Bravo
+FECHA DE ENTREGA:
+Martes, 02 de Junio de 2026
+MILAGRO – ECUADOR
+Tabla de contenido
+INTRODUCCIÓN4
+Objetivo general. -7
+Objetivos específicos. -7
+●Flujo del sistema7
+-Flujo principal de compra7
+●Interacción entre usuarios y sistema8
+Usuario ↔ Sistema8
+●Administrador ↔ Sistema8
+●Actores del sistema9
+1.Usuario9
+2.Administrador9
+●Requerimientos no funcionales:10
+DIAGRAMAS UML11
+Diagrama de Casos de Uso. - fig.211
+●Actor Usuario11
+●Actor Administrador11
+Diagrama de Clases. - fig.311
+●Clase Usuario11
+●Clase Concierto12
+●Clase Entrada12
+●Clase Reserva12
+Clase Pago13
+Diagrama de Secuencia. - fig.311
+RELACIONES ENTRE LAS CLASES13
+DISEÑO DE SOLUCIÓN16
+1. Diagrama de Clases UML16
+2. Persistencia de Datos (Base de Datos)16
+4.Manejo de errores16
+JUSTIFICACIÓN TÉCNICA17
+-Módulo usuarios17
+-Módulo conciertos18
+-Módulo reservas18
+-Módulo pagos18
+●Relación entre requerimientos y diseño19
+VERIFICACIÓN DE COHERENCIA ENTRE LA VISTA ESTRUCTURAL Y LA19
+VISTA DE COMPORTAMIENTO19
+CONCLUSIONES20
+REFERENCIAS21
+Anexos22
+INTRODUCCIÓN
+Actualmente, los sistemas informáticos cumplen un papel fundamental en la
+organización de eventos masivos, especialmente en la venta y reserva de entradas para conciertos. Gracias a estas plataformas, los usuarios pueden adquirir boletos desde cualquier lugar de forma rápida y segura, evitando largas filas y mejorando la experiencia de compra.
+Sin embargo, los conciertos de alta demanda presentan desafíos importantes para los
+sistemas tecnológicos, ya que miles de usuarios pueden intentar acceder simultáneamente. Esto puede provocar errores, caídas del sistema o incluso la venta duplicada de entradas si no existe un adecuado control de concurrencia.
+El presente trabajo tiene como finalidad analizar y diseñar una solución informática para
+un sistema de reserva de entradas para conciertos masivos. Se abordarán aspectos esenciales como el manejo de usuarios concurrentes, seguridad, persistencia de datos, integridad de la información y procesamiento de pagos. Además, se elaborarán diagramas UML y se justificará técnicamente cada decisión tomada en el diseño del sistema.
+METODOLOGÍA APLICADA-
+Metodología de análisis y diseño
+Para desarrollar este proyecto se utilizó una metodología de análisis y diseño orientada a objetos. Lo primero que se hizo es realizar un análisis del problema para identificar las necesidades relacionadas con la reserva de entradas para conciertos masivos. Luego, se realizó el levantamiento de requerimientos funcionales y no funcionales, se identificaron los actores y los procesos principales que se relacionan al sistema. Una vez de haber definido los requerimientos, se elaboraron diagramas UML para representar la estructura y el comportamiento del sistema. Se realizó el diagrama de casos de uso para identificar las funcionalidades requeridas y el diagrama de clases para modelar las entidades principales, sus atributos, métodos y relaciones. Finalmente, se aplicaron principios de diseño de software como abstracción, encapsulamiento, cohesión y bajo acoplamiento para proponer una solución escalable, segura y mantenible, justificando técnicamente cada una de las decisiones adoptadas.
+Roles y responsabilidades del equipo. –
+Integrante
+Rol
+Responsabilidades
+Ferruzola Lucas Holger Samuel
+Product Owner
+Gestión de requerimientos y validación funcional
+Freire Bravo Luis Eduardo
+Scrum Master
+Coordinación y seguimiento del proyecto
+Méndez Barzola Michael Alberto
+Backend Developer
+Desarrollo de lógica de negocio y APIs
+Román Gamarra Ruth Noemi
+Desarrollador Backend / BD
+Diseño e implementación de base de datos
+Torres Morales Deyvi Matheus
+Frontend Developer
+Desarrollo de interfaces de usuario
+Vergara Lino Cristofer Javier
+QA y Arquitectura
+Pruebas, UML y documentación técnica
+ANÁLISIS DEL PROBLEMA. -
+El principal problema en los sistemas de venta de entradas para conciertos masivos
+ocurre cuando miles de personas intentan comprar boletos al mismo tiempo. Esta situación puede generar sobrecarga en el sistema, pérdida de información, errores de pago y conflictos relacionados con la disponibilidad de entradas.
+Uno de los riesgos más importantes es la doble venta de boletos, la cual ocurre cuando
+dos usuarios intentan comprar las mismas entradas simultáneamente. Para evitar este problema, el sistema debe implementar mecanismos de bloqueo temporal y control de concurrencia.
+Además, es necesario garantizar:
+Disponibilidad continua del sistema.
+Actualización en tiempo real del inventario.
+Seguridad de la información personal y financiera.
+Integridad de los datos almacenados.
+Respuesta rápida ante miles de solicitudes.
+Por lo tanto, el sistema debe ser escalable, seguro y confiable para soportar eventos de
+alta demanda sin afectar la experiencia del usuario.
+Objetivo general. -
+Diseñar e implementar una solución para un sistema de reservas de entradas para conciertos masivos a través de principios de arquitectura y diseño de software, con el único objetivo de garantizar seguridad, y evitar concurrencia en las ventas y así obtener una buena gestión de reservas.
+Objetivos específicos. -
+Analizar los principales requerimientos del sistema.
+Diseñar diagramas UML.
+Implementar fundamentos de arquitectura y diseño de software.
+Garantizar la seguridad e integridad de los datos y del sistema.
+Evitar la doble venta de entradas.
+Flujo del sistema
+Flujo principal de compra
+El usuario inicia sesión.
+Consulta los conciertos disponibles.
+Selecciona un concierto.
+El sistema muestra entradas disponibles en tiempo real.
+El usuario selecciona entradas.
+El sistema bloquea temporalmente las entradas.
+Se genera una reserva activa con tiempo límite.
+El usuario realiza el pago.
+La pasarela responde:
+Pago aprobado
+Pago rechazado
+Si el pago es aprobado:
+Las entradas se marcan como vendidas.
+Se confirma la compra.
+Si el tiempo expira:
+La reserva se elimina.
+Las entradas vuelven a estar disponibles. fig.1
+Interacción entre usuarios y sistema
+Usuario ↔ Sistema
+Acción del usuario
+Descripción
+Respuesta del sistema
+1. Registrarse
+El usuario ingresa sus datos personales para crear una cuenta
+El sistema valida la información y crea la cuenta si los datos son correctos.
+2. Iniciar sesión
+El usuario ingresa sus credenciales (correo y contraseña).
+El sistema valida las credenciales y permite el acceso al sistema.
+3. Consultar conciertos
+El usuario busca y selecciona conciertos para ver más información.
+El sistema muestra la información de los conciertos disponibles (artista, fecha, lugar, hora, precios y tipos de entrada).
+4. Seleccionar entradas
+El usuario elige el tipo de entrada y la cantidad que desea comprar.
+El sistema muestra los asientos/entradas disponibles en tiempo real.
+5. Realizar reserva
+El usuario confirma la selección de entradas para reservarlas.
+El sistema bloquea temporalmente las entradas y genera una reserva activa con tiempo límite.
+6. Realizar pago
+El usuario selecciona un método de pago y confirma la transacción.
+El sistema envía la solicitud a la pasarela de pago y procesa la transacción.
+7. Confirmar compra
+El usuario espera la confirmación del pago y la compra de las entradas.
+Si el pago es aprobado, el sistema confirma la compra, envía el comprobante y registra las entradas como vendidas.
+8. Pago rechazado o tiempo expirado
+El pago puede ser rechazado o el usuario no completa el proceso dentro del tiempo límite.
+El sistema cancela la reserva y libera las entradas para que vuelvan a estar disponibles.
+Se puede observar cómo el usuario se comunica con el sistema. El usuario realiza acciones como registrarse, iniciar sesión, consultar conciertos, reservar entradas y pagar. El sistema responde validando datos, mostrando disponibilidad, bloqueando entradas y confirmando o cancelando la compra.
+Administrador ↔ Sistema
+Acción
+Respuesta
+Crear concierto
+Registrar evento
+Configurar precios
+Actualizar tarifas
+Revisar ventas
+Mostrar reportes
+Gestionar disponibilidad
+Actualizar inventario
+Aquí se muestran las funciones del administrador dentro del sistema. El administrador
+puede crear conciertos, configurar precios, revisar ventas y gestionar la disponibilidad. El sistema responde registrando eventos, actualizando tarifas, mostrando reportes y actualizando el inventario de entradas.
+IDENTIFICACIÓN DE REQUERIMIENTOS
+Actores del sistema
+Usuario
+Consulta conciertos.
+Reserva entradas.
+Realiza pagos.
+Confirma compras.
+Administrador
+Registrar conciertos.
+Configurar precios.
+Gestionar disponibilidad.
+Revisar ventas.
+Pasarela de pago
+Procesa pagos.
+Valida transacciones.
+Requerimientos funcionales:
+CÓDIGO
+REQUERIMIENTO
+DESCRIPCIÓN
+PRIORIDAD
+RF1
+Registro e inicio de sesión
+El sistema debe permitir que los usuarios creen una cuenta e ingresen con sus credenciales.
+Alta
+RF2
+Consulta de conciertos
+El sistema debe mostrar la información del concierto, como artista, fecha, hora, lugar, precios y tipos de entrada.
+Alta
+RF3
+Visualización de entradas disponibles
+La plataforma debe mostrar la cantidad de entradas disponibles y actualizarla cuando se realicen reservas o compras.
+Alta
+RF4
+Selección de entradas
+El usuario debe poder escoger el tipo y la cantidad de entradas que desea comprar.
+Alta
+RF5
+Bloqueo temporal de entradas
+Cuando un usuario selecciona entradas, el sistema debe bloquearlas durante un tiempo limitado para evitar que otro usuario compre las mismas entradas.
+Alta
+RF6
+Creación de reserva activa
+El sistema debe generar una reserva temporal asociada al usuario, al concierto y a la cantidad de entradas seleccionadas.
+Alta
+RF7
+Control del tiempo de reserva
+Si el usuario no realiza el pago dentro del tiempo establecido, la reserva debe expirar y las entradas deben volver a estar disponibles.
+Media
+RF8
+Procesamiento del pago
+El sistema debe conectarse con una pasarela de pago y actualizar el estado de la transacción.
+Alta
+RF9
+Confirmación de compra
+Cuando el pago sea aprobado, el sistema debe confirmar la compra y registrar las entradas como vendidas.
+Alta
+RF10
+Gestión administrativa
+El administrador debe poder registrar conciertos, configurar precios, controlar entradas disponibles y revisar las ventas realizadas.
+Media
+Requerimientos no funcionales:
+CÓDIGO
+REQUERIMIENTO
+DESCRIPCIÓN
+IMPORTANCIA
+RNF1
+Rendimiento
+El sistema debe responder rápidamente a las solicitudes de los usuarios, incluso cuando haya miles de usuarios conectados al mismo tiempo.
+Alta
+RNF2
+Escalabilidad
+La plataforma debe ser capaz de soportar un aumento significativo de usuarios y transacciones durante los momentos de mayor demanda, sin afectar su funcionamiento.
+Alta
+RNF3
+Disponibilidad
+El sistema debe mantenerse operativo y accesible durante todo el proceso de venta de entradas, minimizando el tiempo de inactividad.
+Alta
+RNF4
+Seguridad
+Se deben proteger los datos personales de los usuarios, las credenciales de acceso y la información relacionada con los pagos, mediante mecanismos de autenticación, autorización y cifrado.
+Alta
+RNF5
+Confiabilidad
+El sistema debe evitar la venta duplicada de entradas, garantizando que cada asiento se venda solo una vez mediante reservas temporales y control adecuado del inventario.
+Alta
+RNF6
+Usabilidad
+La plataforma debe ser intuitiva, clara y fácil de usar, permitiendo que los usuarios puedan completar el proceso de compra sin dificultades.
+Media
+RNF7
+Integridad de datos
+La información almacenada (reservas, pagos, usuarios, disponibilidad, etc.) debe mantenerse correcta, consistente y actualizada en todo momento, evitando pérdidas o inconsistencias.
+Alta
+DIAGRAMAS UML
+Diagrama de Casos de Uso. - fig.2
+Actor Usuario
+Registrarse
+Iniciar sesión
+Consultar conciertos
+Seleccionar entradas
+Reservar entradas
+Realizar pago
+Confirmar compra
+Actor Administrador
+Crear conciertos
+Configurar precios
+Gestionar disponibilidad
+Revisar ventas
+Actor Pasarela de Pago
+Validar transacciones
+Confirmar pagos
+Diagrama de Clases. - fig.3
+Clase Usuario
+Atributos
+idUsuario
+nombre
+correo
+contraseña
+Métodos
+registrarse()
+iniciarSesion()
+Clase Concierto
+Atributos
+idConcierto
+artista
+fecha
+lugar
+Métodos
+mostrarDisponibilidad()
+Clase Entrada
+Atributos
+idEntrada
+tipo
+precio
+estado
+Métodos
+bloquear()
+liberar()
+Clase Reserva
+Atributos
+idReserva
+fechaReserva
+tiempoExpiracion
+estado
+Métodos
+crearReserva()
+cancelarReserva()
+Clase Pago
+Atributos
+idPago
+monto
+estado
+Métodos
+procesarPago()
+RELACIONES ENTRE LAS CLASES
+Las clases del sistema mantienen las siguientes relaciones:
+Usuario – Reserva: Un usuario puede realizar una o varias reservas.
+Multiplicidad:   Usuario (1) -------- (*) Reserva
+Reserva – Entrada: Una reserva puede contener una o varias entradas.
+Multiplicidad:   Reserva (1) -------- (*) Entrada
+Concierto – Entrada: Un concierto posee múltiples entradas disponibles para la venta.
+Multiplicidad:   Concierto (1) -------- (*) Entrada
+Reserva – Pago: Cada reserva genera un único pago asociado.
+Multiplicidad:   Reserva (1) -------- (1) Pago
+Diagrama de Secuencias. –
+El diagrama representa la interacción entre el usuario y los componentes principales del sistema durante el proceso de búsqueda, selección y compra de entradas. El usuario consulta los conciertos disponibles, realiza una reserva temporal y efectúa el pago correspondiente. Dependiendo del resultado de la transacción y de la disponibilidad de entradas, la reserva puede confirmarse o cancelarse. fig.4
+PRINCIPIOS DE DISEÑO APLICADOS
+Abstracción. - Muestra las características más importantes de un objeto
+o sistema, ocultando los detalles innecesarios o complejos.
+En un sistema de reserva de entradas para conciertos masivos, la abstracción permite que el usuario únicamente visualice funciones simples como seleccionar conciertos, escoger asientos y realizar pagos, mientras el sistema oculta procesos internos complejos. La plataforma realiza validaciones de disponibilidad, control de reservas, procesamiento de pagos, autenticación de usuarios y actualización automática de los asientos. Es decir, cuando el usuario presiona “Reservar asiento”, el sistema ejecuta automáticamente varios procesos sin mostrar su funcionamiento interno. Gracias a la abstracción, el sistema reduce su complejidad, mejora la organización del software y facilita tanto el desarrollo como la experiencia del usuario.
+Encapsulamiento. - Consiste en agrupar dentro de una misma clase los
+datos o atributos y los métodos que trabajan sobre ellos. Además, permite controlar el acceso a la información interna de un objeto, evitando que otros elementos del sistema modifiquen directamente sus datos.
+Protege información importante como reservas, pagos y disponibilidad de asientos. Por ejemplo, el estado de un asiento no puede modificarse directamente, sino únicamente mediante métodos controlados como reservarAsiento(), los cuales validan la disponibilidad antes de realizar la reserva. Además, los datos de usuarios y pagos se mantienen privados para evitar accesos no autorizados y reducir errores. Gracias al encapsulamiento, el sistema mejora la seguridad, evita reservas duplicadas y facilita el mantenimiento del software.
+Descomposición. - Consiste en dividir un sistema complejo en partes más
+pequeñas, organizadas y manejables, llamadas módulos o componentes, cumpliendo una función específica, es decir; se descompone por Módulo de usuarios, Módulo de conciertos, Módulo de entradas, Módulo de reservas, Módulo de pagos, Módulo de confirmación y ventas, Módulo administrativo, Módulo de base de datos.
+Cohesión. - Si la cohesión es alta, significa que el módulo es más fácil de
+entender, mantener y modificar, porque sus responsabilidades están bien definidas, En el sistema la cohesión se evidencia en que cada módulo ya que tienen responsabilidades bien definidas.
+Acoplamiento. - Evalúa el grado de interdependencia, conectividad y
+dependencia mutua existente entre dos o más módulos, clases o componentes. Es decir, Permite que módulos como usuarios, pagos, reservas y conciertos funcionen de manera independiente. Por ejemplo, el módulo de reservas únicamente envía los datos necesarios al módulo de pagos para procesar la compra, sin depender directamente de su funcionamiento interno. Gracias a esto, el módulo de pagos puede actualizarse o modificarse sin afectar al módulo de reservas ni al resto del sistema. El bajo acoplamiento mejora el mantenimiento, reduce errores y facilita que varios desarrolladores trabajen simultáneamente en diferentes módulos del sistema.
+DISEÑO DE SOLUCIÓN
+1. Diagrama de Clases UML
+Usuario: El cliente que compra.
+Concierto: El evento que tiene entradas.
+Entrada: El boleto físico/digital.
+Reserva: El bloqueo temporal del asiento por 10 minutos para que nadie
+más lo tome mientras pagas.
+Pago: La transacción de dinero.
+2. Persistencia de Datos (Base de Datos)
+Es donde se guarda la información de forma segura en MySQL o PostgreSQL. Lo clave
+aquí son las propiedades ACID (Transacciones seguras). Sirven para que si dos personas dan clic al mismo asiento al mismo tiempo, el sistema congele la base de datos por un milisegundo, se lo dé al primero y al segundo le diga que ya no está disponible, evitando la doble venta. fig.5
+3. Seguridad básica
+Cifrado: Las contraseñas se guardan ocultas con BCrypt (nunca en texto
+plano).
+Roles: El Cliente solo puede comprar; el Administrador puede crear
+conciertos y cambiar precios.
+Validaciones: El sistema verifica en el servidor que nadie altere el precio
+de la entrada desde el navegador web antes de pagar.
+Manejo de errores
+Usa bloques try-catch para que la página no se caiga ni se quede en blanco cuando ocurre un imprevisto:
+Error de Clave: Dice “Credenciales incorrectas” sin avisar si el correo
+existe, por seguridad.
+Error de Concurrencia: Si te ganan el boleto, avisa: “Asiento no
+disponible”.
+Error de Tiempo: Si tardas más de 10 minutos en pagar, cancela la
+reserva y libera los boletos para otros compradores.
+JUSTIFICACIÓN TÉCNICA
+La arquitectura del sistema de reserva de entradas para conciertos masivos se fundamenta en un diseño robusto y estructurado, diseñado para garantizar la operatividad bajo condiciones de alta demanda. La elección de los componentes técnicos se justifica bajo los siguientes criterios:
+En primer lugar, se utiliza el estándar UML (Unified Modeling Language) como herramienta de modelado esencial. Su implementación permite visualizar y documentar la estructura del sistema antes de su construcción, asegurando una comunicación clara entre los actores del proyecto y permitiendo identificar fallos de lógica de manera temprana, lo que garantiza que el flujo de compra sea coherente y eficiente.
+Para soportar la carga transaccional, el sistema se ha dividido en módulos independientes. Esta modularización facilita la mantenibilidad, permitiendo realizar actualizaciones en áreas específicas (como la pasarela de pagos) sin comprometer el resto de la plataforma. Además, otorga escalabilidad al sistema, permitiendo que los módulos críticos, como el de reservas, reciban más recursos durante los picos de tráfico sin degradar el rendimiento general.
+Módulo usuarios
+Gestiona el registro e inicio de sesión y controles de perfiles de los usuarios.
+Módulo conciertos
+Gestiona toda la información relevante de los conciertos.
+Módulo reservas
+Gestiona la selección de bloqueo temporal, confirmación de entradas y así evitar la venta repetida de asientos.
+Módulo pagos
+Gestiona las compras y valida los pagos.
+La seguridad se establece como un pilar transversal e innegociable. Mediante la
+implementación de protocolos HTTPS, cifrado de datos y validaciones de identidad, el sistema protege la integridad de la información sensible de los usuarios y previene fraudes electrónicos. Esto no solo cumple con las normativas legales de protección de datos, sino que construye un entorno de confianza para el consumidor final.
+Finalmente, el uso de una base de datos relacional es la pieza clave para la consistencia del inventario. Gracias a las propiedades ACID (Atomicidad, Consistencia, Aislamiento y Durabilidad), el sistema garantiza que cada entrada sea única y que no existan errores de doble venta. La base de datos permite gestionar con precisión milimétrica la relación entre usuarios, asientos y eventos, asegurando que cada transacción se registre de forma persistente y segura, incluso ante fallos inesperados del servidor.
+Decisión
+Justificación
+Arquitectura en capas
+Facilita mantenimiento y escalabilidad
+Base de datos relacional
+Garantiza integridad de datos
+Bloqueo temporal
+Evita doble venta
+Control transaccional
+Mantiene consistencia
+HTTPS y cifrado
+Protege datos sensibles
+Sistema modular
+Facilita futuras mejoras
+Relación entre requerimientos y diseño
+Requerimiento
+Diseño aplicado
+Evitar doble venta
+Control ACID
+Seguridad de usuarios
+BCrypt
+Alta concurrencia
+Arquitectura modular
+Confirmación de pagos
+Pasarela de pago
+VERIFICACIÓN DE COHERENCIA ENTRE LA VISTA ESTRUCTURAL Y LA VISTA DE COMPORTAMIENTO
+La consistencia del modelo propuesto fue verificada mediante la comparación entre el diagrama de clases (vista estructural) y el diagrama de secuencia (vista de comportamiento).
+Clase Usuario
+Componente relacionado: Usuario
+La clase Usuario participa en las acciones de registro, autenticación, consulta de conciertos, reserva de entradas y realización de pagos. Estas interacciones se encuentran representadas tanto en el diagrama de clases como en el diagrama de secuencia, evidenciando coherencia entre la estructura y el comportamiento del sistema.
+Clase Reserva
+Componente relacionado: Reserva
+La clase Reserva administra el bloqueo temporal de entradas y la confirmación o cancelación de la compra. Estas funciones coinciden con el flujo mostrado en el diagrama de secuencia, donde se crean, validan y liberan reservas según el resultado del pago.
+Clase Pago
+Componente relacionado: Pago
+La clase Pago procesa y valida las transacciones realizadas por los usuarios. Su participación en el diagrama de secuencia corresponde a los métodos definidos en el modelo estructural, manteniendo consistencia entre ambos diagramas.
+Clase Concierto y Entrada
+Componente relacionado: Concierto y Entrada
+La disponibilidad de entradas mostrada al usuario depende de la información gestionada por las clases Concierto y Entrada. Esta relación se refleja tanto en las asociaciones del diagrama de clases como en las interacciones descritas durante el proceso de compra.
+Conclusión de coherencia. -
+El análisis realizado confirma que existe coherencia entre la vista estructural representada por el diagrama de clases y la vista de comportamiento representada por el diagrama de secuencia. Las clases, relaciones y métodos definidos en el modelo estructural participan de manera consistente en las interacciones descritas durante el proceso de reserva y compra de entradas, garantizando un diseño sólido y alineado con los requerimientos del sistema.
+CONCLUSIONES
+La ejecución de este informe técnico permite concluir que el éxito de un sistema de reserva de entradas para eventos masivos depende de una arquitectura que priorice la consistencia y la seguridad de los datos. En primera instancia, se determina que el análisis de requerimientos fue el paso crítico para comprender que el mayor desafío no es la venta en sí, sino el manejo de la altísima concurrencia, lo que permitió diseñar estrategias específicas para evitar la degradación del servicio bajo presión.
+Desde la perspectiva de los principios de diseño, se concluye que la organización modular del sistema es lo que garantiza su estabilidad. Al separar las responsabilidades, se logra que procesos complejos, como el bloqueo temporal de asientos, funcionen con precisión quirúrgica, asegurando que el sistema sea escalable y fácil de mantener a largo plazo. Esta estructura previene errores en cadena y permite actualizaciones sin interrumpir la operación global.
+Sobre la implementación de UML, se concluye que su uso fue fundamental para transformar las necesidades de negocio en un plano técnico ejecutable. El modelado visual permitió anticipar la interacción entre los usuarios, el administrador y la pasarela de pagos, eliminando ambigüedades y asegurando que cada flujo crítico fuera validado antes de la fase de construcción.
+Finalmente, la solución propuesta basada en transacciones seguras y el control estricto de inventario en tiempo real se consolida como la respuesta definitiva al problema de la "doble venta". En conclusión, el sistema diseñado no solo cumple con las expectativas funcionales, sino que ofrece una plataforma robusta, segura y confiable que garantiza la integridad de cada transacción y una experiencia de usuario óptima.
+REFERENCIAS
+Pressman, R. S. (2015). Ingeniería del software: Un enfoque práctico (8.ª ed.). McGraw-Hill.
+Sommerville, I. (2016). Ingeniería de software (10.ª ed.). Pearson.
+Booch, G., Rumbaugh, J., & Jacobson, I. (2005). El lenguaje unificado de modelado UML. Pearson Educación.
+Oracle. (2024). MySQL Documentation. MySQL Official Website
+PostgreSQL Global Development Group. (2024). PostgreSQL Documentation. PostgreSQL Official Website
+Anexos
+Figura 1
+Flujo del sistema de reserva de entradas para conciertos
+Nota: Imagen generada mediante una herramienta de código abierto, DRAW.IO para representar el proceso completo para comprar una entrada.
+Figura 2
+Diagrama de caso de uso de un Sistema de reserva de entradas para conciertos masivos
+Nota: Imagen generada mediante una herramienta de código abierto, DRAW.IO. La imagen muestra las funciones que puede realizar cada actor del sistema. El Usuario puede registrarse, iniciar sesión, consultar conciertos, reservar entradas y pagar. El Administrador gestiona conciertos, precios, disponibilidad y ventas. La Pasarela de Pago valida y confirma las transacciones.
+Figura 3
+Diagrama de clases
+Nota: Imagen generada mediante una herramienta de código abierto, DRAW.IO. La imagen muestra las clases principales del sistema: Usuario, Concierto, Entrada, Reserva y Pago. También indica sus atributos, métodos y relaciones. Sirve para representar cómo se organiza internamente el sistema y cómo se conectan sus partes para gestionar la compra de entradas.
+Figura 4
+Diagrama de Secuencia del proceso de reserva de entradas para conciertos.
+Nota: Imagen generada mediante una herramienta de código abierto, DRAW.IO. El diagrama muestra la interacción entre el usuario y el sistema durante la búsqueda, reserva y compra de entradas. Dependiendo de la disponibilidad y del resultado del pago, la reserva se confirma o se cancela
+Figura 5
+Arquitectura de base de datos del sistema de reserva de entradas para conciertos.
+Nota: Imagen elaborada con apoyo de inteligencia artificial para representar la arquitectura básica del sistema, el manejo de la base de datos, propiedades ACID, seguridad y control de errores en el sistema de reserva de entradas para conciertos masivos.
+Figura 6
+Prototipo de interfaz del sistema de reserva de entradas para conciertos
+Nota: Prototipo de interfaz elaborado con apoyo de inteligencia artificial para representar de manera visual el proceso de inicio de sesión, consulta de conciertos, selección de entradas, resumen de reserva, pago y confirmación de compra dentro del sistema de reserva de entradas para conciertos masivos.

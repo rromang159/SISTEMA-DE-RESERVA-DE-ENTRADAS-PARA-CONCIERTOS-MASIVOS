@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.py[cod]
+
+node_modules/
+npm-debug.log*
+package-lock.json
+
+mysql-data/
+backups/
+
+codigo-proyecto-reservas.zip
+
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conciertos | Reserva de entradas</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <div class="notice" id="notice" role="status" aria-live="polite"></div>
+
+      <section class="screen auth-screen active" id="authPanel">
+        <div class="mobile-frame login-card">
+          <header class="app-header">
+            <div class="brand">
+              <span class="brand-mark">C</span>
+              <strong>CONCIERTOS</strong>
+            </div>
+            <button class="icon-button" type="button" aria-label="Menu">=</button>
+          </header>
+
+          <form class="login-form" id="loginForm">
+            <h1>Iniciar sesion</h1>
+            <label>
+              Correo electronico
+              <span class="input-icon">u</span>
+              <input type="email" id="loginEmail" value="usuario@demo.com" required>
+            </label>
+            <label>
+              Contrasena
+              <span class="input-icon">#</span>
+              <input type="password" id="loginPassword" value="Usuario123" required>
+            </label>
+            <a href="#" class="text-link">Olvidaste tu contrasena?</a>
+            <button type="submit" class="primary-button">Iniciar sesion</button>
+            <p>No tienes cuenta? <button type="button" class="link-button" id="showRegister">Registrate aqui</button></p>
+          </form>
+
+          <form class="login-form register-form" id="registerForm" hidden>
+            <h1>Crear cuenta</h1>
+            <label>
+              Nombre
+              <span class="input-icon">n</span>
+              <input type="text" id="registerName" placeholder="Nombre completo" required>
+            </label>
+            <label>
+              Correo electronico
+              <span class="input-icon">u</span>
+              <input type="email" id="registerEmail" placeholder="correo@ejemplo.com" required>
+            </label>
+            <label>
+              Contrasena
+              <span class="input-icon">#</span>
+              <input type="password" id="registerPassword" minlength="6" required>
+            </label>
+            <button type="submit" class="primary-button">Registrarme</button>
+            <p>Ya tienes cuenta? <button type="button" class="link-button" id="showLogin">Inicia sesion</button></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="screen" id="concertsView">
+        <div class="mobile-frame wide-frame">
+          <header class="app-header">
+            <div class="brand">
+              <span class="brand-mark">C</span>
+              <strong>CONCIERTOS</strong>
+            </div>
+            <nav class="top-nav" aria-label="Navegacion principal">
+              <button class="nav-button active" type="button" data-view="concerts">Conciertos</button>
+              <button class="nav-button" type="button" data-view="reservations">Mis reservas</button>
+              <button class="nav-button" type="button" data-view="admin">Perfil</button>
+            </nav>
+            <button class="avatar-button" type="button" id="logoutButton" aria-label="Cerrar sesion">u</button>
+          </header>
+
+          <section class="content-area">
+            <div class="section-title">
+              <h1>Conciertos disponibles</h1>
+              <input class="search" id="concertSearch" type="search" placeholder="Buscar concierto">
+            </div>
+            <div class="concert-grid" id="concertList"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="ticketsView">
+        <div class="mobile-frame wide-frame">
+          <header class="app-header">
+            <button class="back-button" type="button" data-back="concerts">&lt; Volver</button>
+          </header>
+          <section class="content-area selection-area">
+            <h1>Seleccionar entradas</h1>
+            <div class="ticket-layout">
+              <aside class="event-summary" id="selectedConcertInfo"></aside>
+              <section class="seat-panel">
+                <div class="stage">ESCENARIO</div>
+                <div class="seat-map" id="seatMap" aria-label="Mapa de asientos"></div>
+                <div class="ticket-options" id="ticketOptions"></div>
+              </section>
+              <aside class="checkout-box">
+                <label>
+                  Cantidad
+                  <div class="stepper">
+                    <button type="button" id="decreaseQty">-</button>
+                    <strong id="quantityLabel">1</strong>
+                    <button type="button" id="increaseQty">+</button>
+                  </div>
+                </label>
+                <div>
+                  <span>Total</span>
+                  <strong class="total-price" id="selectionTotal">$0.00</strong>
+                </div>
+                <button class="primary-button" type="button" id="continueSelection">Continuar</button>
+              </aside>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="summaryView">
+        <div class="mobile-frame wide-frame">
+          <header class="app-header">
+            <button class="back-button" type="button" data-back="tickets">&lt; Volver</button>
+          </header>
+          <section class="content-area">
+            <h1>Resumen de reserva</h1>
+            <div class="summary-card" id="reservationSummary"></div>
+            <button class="primary-button align-end" type="button" id="goToPayment">Continuar al pago</button>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="paymentView">
+        <div class="mobile-frame wide-frame">
+          <header class="app-header">
+            <button class="back-button" type="button" data-back="summary">&lt; Volver</button>
+          </header>
+          <section class="content-area payment-layout">
+            <h1>Pago</h1>
+            <form class="payment-form" id="paymentForm">
+              <fieldset>
+                <legend>Metodo de pago</legend>
+                <label class="radio-card"><input type="radio" name="paymentMethod" value="Tarjeta de credito / debito" checked> Tarjeta de credito / debito</label>
+                <label class="radio-card"><input type="radio" name="paymentMethod" value="PayPal"> PayPal</label>
+                <label class="radio-card"><input type="radio" name="paymentMethod" value="Transferencia bancaria"> Transferencia bancaria</label>
+              </fieldset>
+              <div class="card-fields">
+                <label>Numero de tarjeta<input id="cardNumber" inputmode="numeric" placeholder="1234 5678 9012 3456"></label>
+                <label>Nombre en la tarjeta<input id="cardName" placeholder="Nombre completo"></label>
+                <div class="two-col">
+                  <label>Vencimiento<input id="cardExpiry" placeholder="MM / AA"></label>
+                  <label>CVV<input id="cardCvv" inputmode="numeric" placeholder="123"></label>
+                </div>
+              </div>
+              <div class="payment-total">
+                <span>Total a pagar</span>
+                <strong id="paymentTotal">$0.00</strong>
+              </div>
+              <button class="primary-button pay-button" type="submit">Pagar</button>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="confirmationView">
+        <div class="mobile-frame wide-frame">
+          <section class="content-area confirmation-area">
+            <div class="success-icon">OK</div>
+            <h1>Pago aprobado!</h1>
+            <p>Tu compra ha sido confirmada.</p>
+            <p class="confirmation-code" id="confirmationCode"></p>
+            <div class="summary-card" id="confirmationSummary"></div>
+            <div class="confirmation-actions">
+              <button class="secondary-button" type="button" data-view="reservations">Ver mis reservas</button>
+              <button class="primary-button" type="button" id="downloadTickets">Descargar entradas</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="reservationsView">
+        <div class="mobile-frame wide-frame">
+          <header class="app-header">
+            <button class="back-button" type="button" data-back="concerts">&lt; Volver</button>
+            <nav class="top-nav" aria-label="Navegacion de reservas">
+              <button class="nav-button" type="button" data-view="concerts">Conciertos</button>
+              <button class="nav-button active" type="button" data-view="reservations">Mis reservas</button>
+            </nav>
+          </header>
+          <section class="content-area">
+            <h1>Mis reservas</h1>
+            <div class="reservation-list" id="reservationRows"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" id="adminView">
+        <div class="mobile-frame wide-frame">
+          <header class="app-header">
+            <button class="back-button" type="button" data-back="concerts">&lt; Volver</button>
+          </header>
+          <section class="content-area admin-area">
+            <h1>Perfil</h1>
+            <div id="sessionBox" class="profile-card"></div>
+            <form class="admin-form" id="concertForm">
+              <h2>Registrar concierto</h2>
+              <label>Artista<input type="text" id="artistInput" required></label>
+              <label>Lugar<input type="text" id="venueInput" required></label>
+              <div class="two-col">
+                <label>Fecha<input type="date" id="dateInput" required></label>
+                <label>Hora<input type="time" id="timeInput" required></label>
+              </div>
+              <div class="two-col">
+                <label>General<input type="number" id="generalQty" min="5" value="2500" required></label>
+                <label>Precio<input type="number" id="generalPrice" min="5" value="35" required></label>
+              </div>
+              <div class="two-col">
+                <label>VIP<input type="number" id="vipQty" min="5" value="600" required></label>
+                <label>Precio<input type="number" id="vipPrice" min="5" value="85" required></label>
+              </div>
+              <button class="primary-button" type="submit">Guardar concierto</button>
+            </form>
+            <div class="metrics" id="metrics"></div>
+            <div class="inventory-list" id="inventoryRows"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
