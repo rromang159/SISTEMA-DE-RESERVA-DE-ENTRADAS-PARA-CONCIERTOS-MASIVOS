@@ -5,7 +5,8 @@ import pymysql
 from pymysql.cursors import DictCursor
 
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+SCHEMA_PATH = BASE_DIR / "database" / "schema.sql"
 
 
 def load_env():
@@ -73,7 +74,7 @@ def main():
                 cursor.execute(f"DROP TABLE IF EXISTS `{table}`")
             cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
 
-            for statement in (BASE_DIR / "schema.sql").read_text(encoding="utf-8").split(";"):
+            for statement in SCHEMA_PATH.read_text(encoding="utf-8").split(";"):
                 statement = statement.strip()
                 if statement:
                     cursor.execute(statement)

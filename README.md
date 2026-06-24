@@ -4,7 +4,7 @@ Proyecto web basado en el documento `PROYECTO - ARQUITECTURA DE SOFTWARE.docx`.
 
 Ahora el sistema esta preparado para funcionar con:
 
-- Frontend: `index.html`, `styles.css`, `app.js`
+- Frontend: `frontend/index.html`, `frontend/styles.css`, `frontend/app.js`
 - Backend: Python + Flask
 - Base de datos: MySQL
 
@@ -27,19 +27,19 @@ Opcion con phpMyAdmin:
 2. Inicia `Apache` y `MySQL`.
 3. Entra a `http://localhost/phpmyadmin`.
 4. Ve a la pestana `Importar`.
-5. Selecciona el archivo `schema.sql`.
+5. Selecciona el archivo `database/schema.sql`.
 6. Ejecuta la importacion.
 
 Opcion con consola de MySQL:
 
 ```bash
-mysql -u root -p < schema.sql
+mysql -u root -p < database/schema.sql
 ```
 
 Si tu usuario `root` no tiene contrasena, puedes usar:
 
 ```bash
-mysql -u root < schema.sql
+mysql -u root < database/schema.sql
 ```
 
 ## Configurar conexion
@@ -108,16 +108,19 @@ Administrador:
 
 ## Archivos principales
 
-- `index.html`: estructura de la interfaz.
-- `styles.css`: estilos responsivos.
-- `app.js`: frontend conectado a la API.
+- `frontend/index.html`: estructura de la interfaz.
+- `frontend/styles.css`: estilos responsivos.
+- `frontend/app.js`: frontend conectado a la API.
+- `frontend/assets/`: imagenes usadas por la interfaz.
 - `app.py`: backend Flask principal.
 - `database.py`: conexion a MySQL.
 - `modules/usuarios.py`: modulo de registro, login y usuarios.
 - `modules/conciertos.py`: modulo de conciertos e inventario.
 - `modules/reservas.py`: modulo de reservas y bloqueo temporal.
 - `modules/pagos.py`: modulo de pagos y confirmacion.
-- `schema.sql`: creacion de base, tablas y datos de prueba.
+- `database/schema.sql`: creacion de base, tablas y datos de prueba.
+- `scripts/migrate_to_spanish_schema.py`: migracion de la estructura anterior.
+- `docs/`: documentacion del proyecto.
 - `.env.example`: ejemplo de configuracion.
 
 ## Tablas de la base de datos

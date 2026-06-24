@@ -220,19 +220,6 @@ legend {
   font-size: 0.82rem;
 }
 
-.input-icon {
-  position: absolute;
-  left: 11px;
-  bottom: 9px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
-.input-icon + input {
-  padding-left: 30px;
-}
-
 .text-link,
 .link-button {
   color: var(--primary);

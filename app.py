@@ -12,6 +12,7 @@ from modules.pagos import pagos_bp
 
 
 BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIR = BASE_DIR / "frontend"
 RESERVATION_MINUTES = 10
 
 
@@ -91,11 +92,11 @@ def create_app():
 
     @app.get("/")
     def index():
-      return send_from_directory(BASE_DIR, "index.html")
+        return send_from_directory(FRONTEND_DIR, "index.html")
 
     @app.get("/<path:filename>")
     def static_files(filename):
-        return send_from_directory(BASE_DIR, filename)
+        return send_from_directory(FRONTEND_DIR, filename)
 
     @app.errorhandler(Exception)
     def handle_error(error):
