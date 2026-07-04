@@ -815,3 +815,51 @@ legend {
     padding-inline: 6px;
   }
 }
+
+.form-help {
+  margin-top: -8px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+button.text-link {
+  justify-self: center;
+}
+
+.user-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 20;
+  min-width: 118px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 14px 30px rgba(31, 22, 72, 0.16);
+}
+
+.user-dropdown button {
+  width: 100%;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.user-dropdown button:hover {
+  background: var(--soft);
+  color: var(--primary);
+}

@@ -56,3 +56,24 @@ def register():
             "role": rows[0]["role"],
         }
     }), 201
+@usuarios_bp.post("/recover-password")
+def recover_password():
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    password = data.get("password") or ""
+
+    if not email or len(password) < 6:
+        return jsonify({"message": "Ingresa un correo y una contrasena de al menos 6 caracteres."}), 400
+
+    rows = execute(
+        "SELECT idUsuario AS id FROM Usuario WHERE correo = %s",
+        [email],
+    )
+    if not rows:
+        return jsonify({"message": "No existe una cuenta registrada con ese correo."}), 404
+
+    execute(
+        "UPDATE Usuario SET contrasena = %s WHERE correo = %s",
+        [password, email],
+    )
+    return jsonify({"message": "Contrasena actualizada correctamente."})

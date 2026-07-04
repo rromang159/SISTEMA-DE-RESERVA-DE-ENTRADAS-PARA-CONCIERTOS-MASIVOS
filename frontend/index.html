@@ -30,7 +30,7 @@
               Contrasena
               <input type="password" id="loginPassword" placeholder="Contraseña" required>
             </label>
-            <a href="#" class="text-link">Olvidaste tu contrasena?</a>
+            <button type="button" class="link-button text-link" id="showRecover">Olvidaste tu contrasena?</button>
             <button type="submit" class="primary-button">Iniciar sesion</button>
             <p>No tienes cuenta? <button type="button" class="link-button" id="showRegister">Registrate aqui</button></p>
           </form>
@@ -52,6 +52,25 @@
             <button type="submit" class="primary-button">Registrarme</button>
             <p>Ya tienes cuenta? <button type="button" class="link-button" id="showLogin">Inicia sesion</button></p>
           </form>
+
+          <form class="login-form recover-form" id="recoverForm" hidden>
+            <h1>Recuperar contrasena</h1>
+            <p class="form-help">Ingresa tu correo registrado y define una nueva contrasena.</p>
+            <label>
+              Correo electronico
+              <input type="email" id="recoverEmail" placeholder="correo@ejemplo.com" required>
+            </label>
+            <label>
+              Nueva contrasena
+              <input type="password" id="recoverPassword" placeholder="Nueva contrasena" minlength="6" required>
+            </label>
+            <label>
+              Confirmar contrasena
+              <input type="password" id="recoverConfirmPassword" placeholder="Repite la contrasena" minlength="6" required>
+            </label>
+            <button type="submit" class="primary-button">Actualizar contrasena</button>
+            <p>Recordaste tus datos? <button type="button" class="link-button" id="showLoginFromRecover">Inicia sesion</button></p>
+          </form>
         </div>
       </section>
 
@@ -67,7 +86,12 @@
               <button class="nav-button" type="button" data-view="reservations">Mis reservas</button>
               <button class="nav-button" type="button" data-view="admin">Perfil</button>
             </nav>
-            <button class="avatar-button" type="button" id="logoutButton" aria-label="Cerrar sesion">u</button>
+                        <div class="user-menu">
+              <button class="avatar-button" type="button" id="avatarButton" aria-label="Abrir menu de usuario">U</button>
+              <div class="user-dropdown" id="userDropdown" hidden>
+                <button type="button" id="logoutButton">Salir</button>
+              </div>
+            </div>
           </header>
 
           <section class="content-area">

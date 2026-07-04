@@ -51,6 +51,8 @@ const reservationSummary = document.getElementById("reservationSummary");
 const confirmationSummary = document.getElementById("confirmationSummary");
 const confirmationCode = document.getElementById("confirmationCode");
 const paymentTotal = document.getElementById("paymentTotal");
+const avatarButton = document.getElementById("avatarButton");
+const userDropdown = document.getElementById("userDropdown");
 
 function userHeaders() {
   return currentUser ? { "x-user-id": currentUser.id } : {};
@@ -140,12 +142,26 @@ function syncSelectedConcert() {
   selectedQuantity = Math.min(selectedQuantity, Math.max(1, selectedTicket?.available || 1));
 }
 
+function getUserInitial() {
+  const source = currentUser?.name || currentUser?.email || "Usuario";
+  return source.trim().charAt(0).toUpperCase();
+}
+
+function updateAvatar() {
+  if (!avatarButton) return;
+  avatarButton.textContent = currentUser ? getUserInitial() : "U";
+  avatarButton.title = currentUser ? `${currentUser.name} - ${currentUser.email}` : "Usuario";
+  if (userDropdown) userDropdown.hidden = true;
+}
+
 function renderSession() {
   if (!currentUser) {
+    updateAvatar();
     showView("auth");
     return;
   }
 
+  updateAvatar();
   sessionBox.innerHTML = `
     <h2>${currentUser.name}</h2>
     <p>${currentUser.email}</p>
@@ -431,10 +447,13 @@ async function cancelReservation(reservationId) {
 
 function renderAdmin(summary) {
   const canAdmin = currentUser?.role === "admin";
-  document.getElementById("concertForm").hidden = !canAdmin;
+  const concertForm = document.getElementById("concertForm");
+  concertForm.hidden = !canAdmin;
+  metrics.hidden = !canAdmin;
+  inventoryRows.hidden = !canAdmin;
 
   if (!canAdmin) {
-    metrics.innerHTML = '<div class="empty">Ingresa como administrador para gestionar conciertos. Usuario: admin@demo.com / Admin123</div>';
+    metrics.innerHTML = "";
     inventoryRows.innerHTML = "";
     return;
   }
@@ -551,6 +570,7 @@ function logout() {
   selectedTicket = null;
   activeReservation = null;
   sessionStorage.removeItem("currentUser");
+  updateAvatar();
   showView("auth");
 }
 
@@ -569,17 +589,29 @@ document.querySelectorAll("[data-back]").forEach((button) => {
   button.addEventListener("click", () => showView(button.dataset.back));
 });
 
+avatarButton?.addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (!currentUser) return;
+  userDropdown.hidden = !userDropdown.hidden;
+});
+
 document.getElementById("logoutButton").addEventListener("click", logout);
 
-document.getElementById("showRegister").addEventListener("click", () => {
-  document.getElementById("loginForm").hidden = true;
-  document.getElementById("registerForm").hidden = false;
+document.addEventListener("click", (event) => {
+  if (!userDropdown || userDropdown.hidden) return;
+  if (!event.target.closest(".user-menu")) userDropdown.hidden = true;
 });
 
-document.getElementById("showLogin").addEventListener("click", () => {
-  document.getElementById("registerForm").hidden = true;
-  document.getElementById("loginForm").hidden = false;
-});
+function showAuthForm(formName) {
+  document.getElementById("loginForm").hidden = formName !== "login";
+  document.getElementById("registerForm").hidden = formName !== "register";
+  document.getElementById("recoverForm").hidden = formName !== "recover";
+}
+
+document.getElementById("showRegister").addEventListener("click", () => showAuthForm("register"));
+document.getElementById("showLogin").addEventListener("click", () => showAuthForm("login"));
+document.getElementById("showRecover").addEventListener("click", () => showAuthForm("recover"));
+document.getElementById("showLoginFromRecover").addEventListener("click", () => showAuthForm("login"));
 
 document.getElementById("loginForm").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -616,6 +648,32 @@ document.getElementById("registerForm").addEventListener("submit", async (event)
     event.target.reset();
     await refreshData(false);
     showView("concerts");
+  } catch (error) {
+    showNotice(error.message);
+  }
+});
+
+document.getElementById("recoverForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const email = document.getElementById("recoverEmail").value.trim().toLowerCase();
+  const password = document.getElementById("recoverPassword").value;
+  const confirmPassword = document.getElementById("recoverConfirmPassword").value;
+
+  if (password !== confirmPassword) {
+    showNotice("Las contrasenas no coinciden.");
+    return;
+  }
+
+  try {
+    await api("/recover-password", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    event.target.reset();
+    document.getElementById("loginEmail").value = email;
+    document.getElementById("loginPassword").value = "";
+    showAuthForm("login");
+    showNotice("Contrasena actualizada. Inicia sesion con tu nueva contrasena.");
   } catch (error) {
     showNotice(error.message);
   }
@@ -692,6 +750,7 @@ document.getElementById("concertForm").addEventListener("submit", async (event) 
 
 currentUser = JSON.parse(sessionStorage.getItem("currentUser") || "null");
 renderSession();
+updateAvatar();
 refreshData(false).then(() => {
   if (currentUser) showView("concerts");
 });
